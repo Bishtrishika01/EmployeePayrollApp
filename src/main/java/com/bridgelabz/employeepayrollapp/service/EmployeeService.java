@@ -22,4 +22,9 @@ public class EmployeeService {
     public Optional<Employee> getEmployeeById(Long id) {
         return employeeRepository.findById(id);
     }
+
+    public Employee addEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
 }

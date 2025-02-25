@@ -5,7 +5,6 @@ import com.bridgelabz.employeepayrollapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;

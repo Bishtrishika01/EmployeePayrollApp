@@ -15,7 +15,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployee() {
         return employeeRepository.findAll();
     }
 
@@ -38,4 +38,5 @@ public class EmployeeService {
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
     }
+
 }

@@ -14,7 +14,7 @@ public class Employee {
 
     @Column(nullable = false)
     private double salary;
-
+    public Employee(){};
 
     public Employee(String name, double salary) {
         this.name = name;

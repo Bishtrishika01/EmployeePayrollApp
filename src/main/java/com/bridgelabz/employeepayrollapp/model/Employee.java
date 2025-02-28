@@ -1,42 +1,37 @@
 package com.bridgelabz.employeepayrollapp.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
+import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 @Entity
-@Table(name = "employees")
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+public @Data class Employee {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int employeeId;
     private String name;
+    private long salary;
+    private String gender;
+    private LocalDate starDate;
+    private String note;
+    private String profilePic;
+    private List<String> department;
 
-    @Column(nullable = false)
-    private double salary;
     public Employee(){};
 
-    public Employee(String name, double salary) {
+    public Employee(String name, long salary, String gender, LocalDate starDate, String note, String profilePic, List<String> department) {
         this.name = name;
         this.salary = salary;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
+        this.gender = gender;
+        this.starDate = starDate;
+        this.note = note;
+        this.profilePic = profilePic;
+        this.department = department;
     }
 }

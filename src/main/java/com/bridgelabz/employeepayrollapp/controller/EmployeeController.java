@@ -3,8 +3,8 @@ package com.bridgelabz.employeepayrollapp.controller;
 import com.bridgelabz.employeepayrollapp.model.Employee;
 import com.bridgelabz.employeepayrollapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,40 +12,38 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    Logger logger = Logger.getLogger(EmployeeController.class);
     @Autowired
-    EmployeeService employeeService;
-    //To get all the employees
-    @GetMapping
-    public List<Employee> getAllEmployees(){
-        logger.info("All employee list end point called");
-        return employeeService.getAllEmployee();
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-    //TO get employee with id
-    @GetMapping("/get/{id}")
-    public Optional<Employee> getEmployeeById(@PathVariable Long id){
-        logger.info("specific employee list end point called");
-        return employeeService.getEmployeeById(id);
+    @GetMapping
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployee());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+        Optional<Employee> employee = employeeService.getEmployeeById(id);
+        return employee.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/create")
-    public Employee addEmployee(@RequestBody Employee employee){
-        logger.info("member created");
-        return employeeService.addEmployee(employee);
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        return ResponseEntity.ok(employeeService.addEmployee(employee));
     }
 
-    //Update the employee
-    @PutMapping("/update/{id}")
-    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
-        logger.info("Employee updation endpoint called");
-        return employeeService.updateEmployee(id,employee);
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, updatedEmployee));
     }
 
-    //Delete the employee
-    @DeleteMapping("/delete/{id}")
-    public void deleteEmployee(@PathVariable Long id){
-        logger.info("employee deletion endpint called");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }

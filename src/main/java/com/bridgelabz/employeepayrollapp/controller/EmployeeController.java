@@ -3,73 +3,50 @@ package com.bridgelabz.employeepayrollapp.controller;
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.model.Employee;
 import com.bridgelabz.employeepayrollapp.service.EmployeeService;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
-@RequestMapping("/employeepayrollservice")
+@RequestMapping("/employees")
 public class EmployeeController {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
 
-    // To get all the employees
-    @GetMapping
-    public List<Employee> getAllEmployees() {
-        log.info("All employee endpoint called");
-        return employeeService.getAllEmployee();
-    }
-
-    // To get employee by id
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Optional<Employee>> getEmployeeById(@PathVariable Long id ) {
-        log.info("By ID employee endpoint called with ID: {}", id);
-        Optional<Employee> employee = employeeService.getEmployeeById(id);
-        if (employee.isPresent()) {
-            return ResponseEntity.ok(employee);
-        } else {
-            log.warn("No employee found with ID: {}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
-        }
-    }
-
-    // To create a new employee
     @PostMapping("/create")
-    public ResponseEntity<?> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
-        log.info("Create employee endpoint called");
+    public ResponseEntity<Employee> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
         return ResponseEntity.ok(employeeService.addEmployee(employeeDTO));
     }
 
-    // To update the employee
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeDTO employeeDTO) {
-        log.info("Update employee endpoint called with ID: {}", id);
-        Employee updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
-        if (updatedEmployee != null) {
-            return ResponseEntity.ok(updatedEmployee);
-        } else {
-            log.warn("No employee found with ID: {}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @GetMapping
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-    // To delete the employee
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Employee>> getEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
+        logger.info("Updating employee with ID: {}", id);
+        Employee updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+        return ResponseEntity.ok(updatedEmployee);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        log.info("Delete employee endpoint called with ID: {}", id);
-        boolean deleted = employeeService.deleteEmployee(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            log.warn("No employee found with ID: {} to delete", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }

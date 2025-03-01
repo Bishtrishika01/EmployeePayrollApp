@@ -1,33 +1,26 @@
 package com.bridgelabz.employeepayrollapp.exception;
 
-import lombok.extern.slf4j.Slf4j;
+import com.bridgelabz.employeepayrollapp.dto.ResponseDTOforError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.time.LocalDateTime;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@Slf4j
-@RestControllerAdvice
+@ControllerAdvice
 public class EmployeePayrollExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-        log.error("Validation errors: {}", errors);
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(EmployeeNotFoundExceptionHandler.class)
+    public ResponseEntity<ResponseDTOforError> handleEmployeeNotFoundException(EmployeeNotFoundExceptionHandler ex) {
+        ResponseDTOforError response = new ResponseDTOforError(
+                ex.getMessage(), "Employee ID not found", LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalException(Exception ex) {
-        log.error("Unexpected error: {}", ex.getMessage());
-        return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ResponseDTOforError> handleGlobalException(Exception ex) {
+        ResponseDTOforError response = new ResponseDTOforError(
+                ex.getMessage(), "Unexpected error occurred", LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

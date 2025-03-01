@@ -20,7 +20,7 @@ public  @ToString class EmployeeDTO {
     private String gender;
 
     // Date is converted into LocalDate with @JsonFormat and pattern
-    @JsonFormat(pattern = "dd MM yyyy")
+    @JsonFormat(pattern = "dd MMM yyyy")
     @NotNull(message = "Start date should not be set empty")
     // To take only past or today's date
     @PastOrPresent(message = "Start date should be past or today's date")

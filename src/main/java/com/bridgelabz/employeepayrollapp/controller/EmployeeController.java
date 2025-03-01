@@ -6,10 +6,8 @@ import com.bridgelabz.employeepayrollapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.addEmployee(employeeDTO));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
@@ -44,9 +42,15 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Employee deleted successfully with ID: " + id);
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<List<Employee>> getEmployeesInSales() {
+        List<Employee> employees = employeeService.getEmployeesInSalesDepartment();
+        return ResponseEntity.ok(employees);
     }
 }

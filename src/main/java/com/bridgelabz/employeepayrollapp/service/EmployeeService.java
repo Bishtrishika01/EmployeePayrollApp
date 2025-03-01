@@ -1,6 +1,5 @@
 package com.bridgelabz.employeepayrollapp.service;
 
-import com.bridgelabz.employeepayrollapp.controller.EmployeeController;
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.exception.EmployeeNotFoundExceptionHandler;
 import com.bridgelabz.employeepayrollapp.model.Employee;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +15,7 @@ import java.util.Optional;
 public class EmployeeService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -60,5 +59,9 @@ public class EmployeeService {
 
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
+    }
+
+    public List<Employee> getEmployeesInSalesDepartment() {
+        return employeeRepository.findEmployeesInSalesDepartment();
     }
 }

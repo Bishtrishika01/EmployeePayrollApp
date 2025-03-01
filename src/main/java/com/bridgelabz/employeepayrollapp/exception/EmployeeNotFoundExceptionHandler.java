@@ -5,3 +5,4 @@ public class EmployeeNotFoundExceptionHandler extends RuntimeException {
         super(message);
     }
 }
+
